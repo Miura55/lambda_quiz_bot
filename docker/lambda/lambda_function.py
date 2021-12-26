@@ -92,6 +92,8 @@ def lambda_handler(event, context):
             'statusCode': 200,
             'body': 'OK'
         }
+
+    # Webhookから必要な値を取得
     user_id = event['events'][0]['source']['userId']
     reply_token = event['events'][0].get('replyToken')
     event_type = event['events'][0]['type']
@@ -111,7 +113,7 @@ def lambda_handler(event, context):
             text='このbotでは簡単な3択クイズを用意しました\nそれでは始めていきましょう！')
         question_msg = TextSendMessage(text='1問目：日本の首都は？\n1:名古屋\n2:大阪\n3:東京')
         line_bot.reply_message(
-            event['events'][0]['replyToken'],
+            reply_token,
             [greet_msg, question_msg]
         )
         return {
