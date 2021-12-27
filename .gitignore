@@ -1,2 +1,3 @@
 .env
 handson_codes/
+docker/dynamodb/*.db
