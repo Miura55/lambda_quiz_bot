@@ -5,6 +5,9 @@ import boto3
 from linebot import LineBotApi
 from linebot.models import TextSendMessage
 
+from pynamodb.models import Model
+from pynamodb.attributes import UnicodeAttribute, NumberAttribute, MapAttribute
+
 access_token = os.getenv('LINE_ACCESS_TOKEN')
 line_bot = LineBotApi(access_token)
 
@@ -14,11 +17,33 @@ user_scores = dynamodb.Table('user_scores')
 scores = dynamodb.Table('scores')
 
 
+class ScoreMap(MapAttribute):
+    q1 = NumberAttribute(null=True)
+    q2 = NumberAttribute(null=True)
+    q3 = NumberAttribute(null=True)
+
+
+class UserScore(Model):
+    class Meta:
+        table_name = 'UserScore'
+        if endpoint_url:
+            host = endpoint_url
+
+    line_user_id = UnicodeAttribute(hash_key=True)
+    scores = MapAttribute(of=ScoreMap)
+
+
+# テーブルが存在しない場合は作成する
+if not UserScore.exists():
+    UserScore.create_table(read_capacity_units=1,
+                           write_capacity_units=1, wait=True)
+
+
 def get_result(question, answer):
     question_info = scores.get_item(Key={"question_id": question})['Item']
     score = 0
     if question_info['answer'] == answer:
-        score = question_info['score']
+        score = int(question_info['score'])
     return score
 
 
@@ -32,36 +57,23 @@ def get_next_question(inserted_question):
     return next_question
 
 
-def update_score(user_id, item, answer):
-    scores = item['scores']
+def update_score(user_score, answer):
     # 各設問に対するスコアを挿入する
     inserted_question = ''
-    if scores.get('q1') is None:
+    if user_score.scores['q1'] is None:
         score = get_result('q1', answer)
         inserted_question = 'q1'
-    elif scores.get('q2') is None:
+    elif user_score.scores['q2'] is None:
         score = get_result('q2', answer)
         inserted_question = 'q2'
-    elif scores.get('q3') is None:
+    elif user_score.scores['q3'] is None:
         score = get_result('q3', answer)
         inserted_question = 'q3'
 
     # スコアを更新する
     if inserted_question != '':
-        option = {
-            'Key': {
-                'line_user_id': user_id
-            },
-            'ExpressionAttributeNames': {
-                '#scores': 'scores'
-            },
-            'ExpressionAttributeValues': {
-                ':{}'.format(inserted_question): score
-            },
-            'UpdateExpression': 'set #scores.{} = :{}'.format(inserted_question, inserted_question),
-        }
-        user_scores.update_item(**option)
-
+        user_score.scores[inserted_question] = score
+        user_score.save()
     if score == 0:
         result_msg = TextSendMessage(text='不正解です')
     else:
@@ -69,8 +81,9 @@ def update_score(user_id, item, answer):
 
     # 最終問題であれば結果を返す
     if inserted_question == 'q3':
-        user_data = user_scores.get_item(Key={'line_user_id': user_id})['Item']
-        total_score = sum(user_data['scores'].values())
+        result_data = UserScore.get(user_score.line_user_id)
+        total_score = result_data.scores['q1'] + \
+            result_data.scores['q2'] + result_data.scores['q3']
         next_msg = TextSendMessage(
             text='以上で問題は終了です\n合計得点は{}点です'.format(total_score))
     else:
@@ -98,17 +111,14 @@ def lambda_handler(event, context):
     reply_token = event['events'][0].get('replyToken')
     event_type = event['events'][0]['type']
     message_text = event['events'][0]['message']['text'] if event_type == 'message' else ''
-    resp = user_scores.get_item(Key={"line_user_id": user_id})
 
     if event_type == 'follow' or message_text == 'start':
         # 友だち追加時に初期値を設定する
-        with user_scores.batch_writer() as batch:
-            batch.put_item(
-                Item={
-                    "line_user_id": user_id,
-                    "scores": {}
-                }
-            )
+        UserScore(
+            line_user_id=user_id,
+            scores=ScoreMap(q1=None, q2=None, q3=None)
+        ).save()
+
         greet_msg = TextSendMessage(
             text='このbotでは簡単な3択クイズを用意しました\nそれでは始めていきましょう！')
         question_msg = TextSendMessage(text='1問目：日本の首都は？\n1:名古屋\n2:大阪\n3:東京')
@@ -122,15 +132,16 @@ def lambda_handler(event, context):
         }
     elif event_type == 'unfollow':
         # ブロックされた時にはデータを削除する
-        user_scores.delete_item(Key={"line_user_id": user_id})
+        UserScore.get(user_id).delete()
         return {
             'statusCode': 200,
             'body': json.dumps('Delete Success!')
         }
     else:
+        user_score = UserScore.get(user_id)
         # 返信メッセージを作成する
         if message_text.isnumeric():
-            result = update_score(user_id, resp['Item'], message_text)
+            result = update_score(user_score, message_text)
             print('Question: {}\nScore: {}'.format(
                 result['inserted_question'], result['score']))
             msg_obj = result['msg']
