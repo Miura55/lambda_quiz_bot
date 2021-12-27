@@ -1,3 +1,5 @@
 .env
 handson_codes/
 docker/dynamodb/*.db
+docker/lambda/build/
+real_table/

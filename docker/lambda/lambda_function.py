@@ -13,7 +13,6 @@ line_bot = LineBotApi(access_token)
 
 endpoint_url = os.getenv('DYNAMODB_ENDPOINT', None)
 dynamodb = boto3.resource('dynamodb', endpoint_url=endpoint_url)
-user_scores = dynamodb.Table('user_scores')
 scores = dynamodb.Table('scores')
 
 
@@ -26,6 +25,7 @@ class ScoreMap(MapAttribute):
 class UserScore(Model):
     class Meta:
         table_name = 'UserScore'
+        region = 'ap-northeast-1'
         if endpoint_url:
             host = endpoint_url
 
