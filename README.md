@@ -18,3 +18,10 @@ ngrokでローカルポートを払い出す
 ```
 ngrok http 18080
 ```
+
+Messaging APIのWebhook URLを設定するときには以下のようになる
+
+
+```
+【ngrokのURL】/2015-03-31/functions/function/invocations
+```
