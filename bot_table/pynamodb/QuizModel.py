@@ -13,5 +13,6 @@ class Score(Model):
         host = endpoint_url
 
     question_id = UnicodeAttribute(hash_key=True)
+    question = UnicodeAttribute()
     answer = UnicodeAttribute()
     score = NumberAttribute()

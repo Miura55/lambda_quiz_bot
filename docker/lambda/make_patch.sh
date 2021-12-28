@@ -4,5 +4,11 @@ if [ -e lambda_patch.zip ]; then
     echo "Removed old lambda_patch.zip"
 fi
 
+# 必要なモジュールをインストール
+cp lambda_fuction.py build/
+cd build/
+pip install -r requirements.txt -t .
+
 # buildディレクトリ内のファイルをzipに圧縮して保存する
-zip -r lambda_patch build/
+zip -r ../lambda_patch .
+cd ..

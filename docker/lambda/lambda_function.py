@@ -49,12 +49,14 @@ def get_result(question, answer):
 
 def get_next_question(inserted_question):
     if inserted_question == 'q1':
-        next_question = TextSendMessage(
-            text='2問目：AWSのサーバーレス実行環境、正しいのはどれ？\n1:lambda\n2:lamda\n3:lamdba')
+        next_question = scores.get_item(
+            Key={"question_id": 'q2'}
+        )['Item']['question']
     elif inserted_question == 'q2':
-        next_question = TextSendMessage(
-            text='3問目：新しい1万円札の顔は？\n1:新渡戸稲造\n2:渋沢栄一\n3:福沢諭吉')
-    return next_question
+        next_question = scores.get_item(
+            Key={"question_id": 'q3'}
+        )['Item']['question']
+    return TextSendMessage(text=next_question)
 
 
 def update_score(user_score, answer):
@@ -119,9 +121,13 @@ def lambda_handler(event, context):
             scores=ScoreMap(q1=None, q2=None, q3=None)
         ).save()
 
+        first_question = scores.get_item(
+            Key={"question_id": 'q1'}
+        )['Item']['question']
         greet_msg = TextSendMessage(
-            text='このbotでは簡単な3択クイズを用意しました\nそれでは始めていきましょう！')
-        question_msg = TextSendMessage(text='1問目：日本の首都は？\n1:名古屋\n2:大阪\n3:東京')
+            text='このbotでは簡単な3択クイズを用意しました\nそれでは始めていきましょう！'
+        )
+        question_msg = TextSendMessage(text=first_question)
         line_bot.reply_message(
             reply_token,
             [greet_msg, question_msg]
