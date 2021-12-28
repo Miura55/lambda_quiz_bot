@@ -1,11 +1,11 @@
 # パッチファイルがあれば削除する
-if [ -e lambda_patch.zip ]; then
+if [ -e "lambda_patch.zip" ]; then
     rm lambda_patch.zip
     echo "Removed old lambda_patch.zip"
 fi
 
 # 必要なモジュールをインストール
-cp lambda_fuction.py build/
+cp lambda_function.py build/
 cd build/
 pip install -r requirements.txt -t .
 
