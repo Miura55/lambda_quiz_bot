@@ -7,7 +7,7 @@ fi
 # 必要なモジュールをインストール
 cp lambda_function.py build/
 cd build/
-pip install -r requirements.txt -t .
+pip install -r ../requirements.txt -t .
 
 # buildディレクトリ内のファイルをzipに圧縮して保存する
 zip -r ../lambda_patch .
