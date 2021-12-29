@@ -3,7 +3,7 @@ import json
 import boto3
 
 from linebot import LineBotApi
-from linebot.models import TextSendMessage
+from linebot.models import TextSendMessage, FlexSendMessage
 
 from pynamodb.models import Model
 from pynamodb.attributes import UnicodeAttribute, NumberAttribute, MapAttribute
@@ -56,7 +56,10 @@ def get_next_question(inserted_question):
         next_question = scores.get_item(
             Key={"question_id": 'q3'}
         )['Item']['question']
-    return TextSendMessage(text=next_question)
+    return FlexSendMessage(
+        alt_text='Next Question',
+        contents=json.loads(next_question)
+    )
 
 
 def update_score(user_score, answer):
@@ -127,7 +130,10 @@ def lambda_handler(event, context):
         greet_msg = TextSendMessage(
             text='このbotでは簡単な3択クイズを用意しました\nそれでは始めていきましょう！'
         )
-        question_msg = TextSendMessage(text=first_question)
+        question_msg = FlexSendMessage(
+            alt_text='First Question',
+            contents=json.loads(first_question)
+        )
         line_bot.reply_message(
             reply_token,
             [greet_msg, question_msg]

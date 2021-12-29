@@ -1,0 +1,196 @@
+{
+    "q1": {
+        "type": "bubble",
+        "direction": "ltr",
+        "hero": {
+            "type": "image",
+            "url": "https://1.bp.blogspot.com/-5S8rmtezagQ/UnyHakT62TI/AAAAAAAAajc/TsAKmkq0wIE/s400/nihonchizu_area.png",
+            "size": "full",
+            "aspectRatio": "1.51:1",
+            "aspectMode": "fit"
+        },
+        "body": {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+                {
+                    "type": "text",
+                    "text": "第1問",
+                    "size": "xl",
+                    "align": "start",
+                    "contents": []
+                },
+                {
+                    "type": "text",
+                    "text": "日本の首都はどこ？",
+                    "contents": []
+                }
+            ]
+        },
+        "footer": {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+                {
+                    "type": "button",
+                    "action": {
+                        "type": "message",
+                        "label": "1：名古屋",
+                        "text": "1"
+                    },
+                    "color": "#E76D30FF",
+                    "style": "primary"
+                },
+                {
+                    "type": "button",
+                    "action": {
+                        "type": "message",
+                        "label": "2：大阪",
+                        "text": "2"
+                    },
+                    "style": "primary"
+                },
+                {
+                    "type": "button",
+                    "action": {
+                        "type": "message",
+                        "label": "3：東京",
+                        "text": "3"
+                    },
+                    "color": "#3085E7FF",
+                    "style": "primary"
+                }
+            ]
+        }
+    },
+    "q2": {
+        "type": "bubble",
+        "direction": "ltr",
+        "hero": {
+            "type": "image",
+            "url": "https://off.tokyo/wp-content/uploads/2021/02/aws-logo.png",
+            "size": "full",
+            "aspectRatio": "1.51:1",
+            "aspectMode": "fit"
+        },
+        "body": {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+                {
+                    "type": "text",
+                    "text": "第2問",
+                    "size": "xl",
+                    "align": "start",
+                    "contents": []
+                },
+                {
+                    "type": "text",
+                    "text": "AWSのサーバーレスサービス、正しいのは？",
+                    "wrap": true,
+                    "contents": []
+                }
+            ]
+        },
+        "footer": {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+                {
+                    "type": "button",
+                    "action": {
+                        "type": "message",
+                        "label": "1：lambda",
+                        "text": "1"
+                    },
+                    "color": "#E76D30FF",
+                    "style": "primary"
+                },
+                {
+                    "type": "button",
+                    "action": {
+                        "type": "message",
+                        "label": "2：lamda",
+                        "text": "2"
+                    },
+                    "style": "primary"
+                },
+                {
+                    "type": "button",
+                    "action": {
+                        "type": "message",
+                        "label": "3：lumada",
+                        "text": "3"
+                    },
+                    "color": "#3085E7FF",
+                    "style": "primary"
+                }
+            ]
+        }
+    },
+    "q3": {
+        "type": "bubble",
+        "direction": "ltr",
+        "hero": {
+            "type": "image",
+            "url": "https://3.bp.blogspot.com/-qsaDShPAY04/VvKZEEJtwQI/AAAAAAAA5Ew/7MqcDbc66fYG_n4b_8lnrjjrkcznnFcsA/s800/money_satsutaba.png",
+            "size": "full",
+            "aspectRatio": "1.51:1",
+            "aspectMode": "fit"
+        },
+        "body": {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+                {
+                    "type": "text",
+                    "text": "第3問",
+                    "size": "xl",
+                    "align": "start",
+                    "contents": []
+                },
+                {
+                    "type": "text",
+                    "text": "新しい1万円札の顔は？",
+                    "wrap": true,
+                    "contents": []
+                }
+            ]
+        },
+        "footer": {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+                {
+                    "type": "button",
+                    "action": {
+                        "type": "message",
+                        "label": "1：福沢諭吉",
+                        "text": "1"
+                    },
+                    "color": "#E76D30FF",
+                    "style": "primary"
+                },
+                {
+                    "type": "button",
+                    "action": {
+                        "type": "message",
+                        "label": "2：渋沢栄一",
+                        "text": "2"
+                    },
+                    "style": "primary"
+                },
+                {
+                    "type": "button",
+                    "action": {
+                        "type": "message",
+                        "label": "3：新渡戸稲造",
+                        "text": "3"
+                    },
+                    "color": "#3085E7FF",
+                    "style": "primary"
+                }
+            ]
+        }
+    }
+}
